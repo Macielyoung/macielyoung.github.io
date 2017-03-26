@@ -1,94 +1,85 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
   
-  <title>空间数据库的基本索引结构 - Dreaming</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="B-树B-树又称为平衡多叉查找树，其定义如下。
-一颗m阶的B-树，或为空树，或为具有以下特性的m叉查找树：
-（1）树中每个结点最多有m棵子树；
-（2）除根以外的所有非叶节点至少有$\left \lceil m/2 \right \rceil$棵子树，根节点若是非叶节点，则至少有两棵子树；
-（3）所有的非叶结点中含有如下信息
-$$(n,A{0},(K{1},D{1}),A{1},(K{2},D{2}">
-<meta property="og:type" content="article">
-<meta property="og:title" content="空间数据库的基本索引结构">
-<meta property="og:url" content="http://haomaoxiang.coding.me/2017/03/26/空间数据库的基本索引结构/index.html">
-<meta property="og:site_name" content="Dreaming">
-<meta property="og:description" content="B-树B-树又称为平衡多叉查找树，其定义如下。
-一颗m阶的B-树，或为空树，或为具有以下特性的m叉查找树：
-（1）树中每个结点最多有m棵子树；
-（2）除根以外的所有非叶节点至少有$\left \lceil m/2 \right \rceil$棵子树，根节点若是非叶节点，则至少有两棵子树；
-（3）所有的非叶结点中含有如下信息
-$$(n,A{0},(K{1},D{1}),A{1},(K{2},D{2}">
-<meta property="og:image" content="http://haomaoxiang.coding.me/"http://i2.buimg.com/4851/5ee00d4f6c8a93f5.jpg"">
-<meta property="og:image" content="http://haomaoxiang.coding.me/"http://i2.buimg.com/4851/36910bdc918ff2f0.png"">
-<meta property="og:image" content="http://haomaoxiang.coding.me/"http://i2.buimg.com/4851/b98b32fbd5be3fc4.jpg"">
-<meta property="og:updated_time" content="2017-03-26T06:34:15.422Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="空间数据库的基本索引结构">
-<meta name="twitter:description" content="B-树B-树又称为平衡多叉查找树，其定义如下。
-一颗m阶的B-树，或为空树，或为具有以下特性的m叉查找树：
-（1）树中每个结点最多有m棵子树；
-（2）除根以外的所有非叶节点至少有$\left \lceil m/2 \right \rceil$棵子树，根节点若是非叶节点，则至少有两棵子树；
-（3）所有的非叶结点中含有如下信息
-$$(n,A{0},(K{1},D{1}),A{1},(K{2},D{2}">
-<meta name="twitter:image" content="http://haomaoxiang.coding.me/"http://i2.buimg.com/4851/5ee00d4f6c8a93f5.jpg"">
-  
-  
-  <link href="/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
-  <link href="/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="/css/style.css">
+  <title>空间数据库的基本索引结构</title>
+  <meta name="author" content="Macielyoung">
+   <meta name="description" content="In me the tiger sniffs the rose">
   
 
+  <meta property="og:title" content="空间数据库的基本索引结构"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Dreaming"/>
+ <meta property="og:image" content="undefined"/>
+  
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Dreaming" type="application/atom+xml">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 
 <body>
-  <div id="container">
-    <header id="header">
-  <div id="header-outer" class="outer">
-    <div id="header-inner" class="inner">
-      <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a>
-      <a id="logo" class="logo" href="/"></a>
-      <nav id="main-nav">
-        
-      </nav>
-      <nav id="sub-nav">
-        <div id="search-form-wrap">
-          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://haomaoxiang.coding.me"></form>
-        </div>
-      </nav>
+  <a id="top"></a>
+  <div id='wx_pic' style='display:none;'><img src='/wx_share.png'/></div>
+  <div id="main">
+    <div class="behind">
+      <div class="back">
+        <a href="/" class="black-color"><i class="fa fa-times" aria-hidden="true"></i></a>
+      </div>
+      <div class="description">
+        &nbsp;
+      </div>
     </div>
-  </div>
-</header>
-    <section id="main" class="outer"><article id="post-空间数据库的基本索引结构" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+    <div class="container">
+      
+
+  <article class="standard post">
+    <div class="title">
+      
   
-    <h1 class="article-title" itemprop="name">
-      空间数据库的基本索引结构
+    <h1 class="page-title center">
+        空间数据库的基本索引结构
     </h1>
   
 
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2017/03/26/空间数据库的基本索引结构/" class="article-date">
-  <time datetime="2017-03-26T06:34:15.421Z" itemprop="datePublished">2017-03-26</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Spatial-database/">Spatial database</a>
-  </div>
 
+    </div>
+    <div class="meta center">
+      
+<time datetime="2017-03-26T06:34:15.421Z">
+  <i class="fa fa-calendar"></i>&nbsp;
+  2017-03-26
+</time>
+
+
+
+    
+    &nbsp;
+    <i class="fa fa-tag"></i>&nbsp;
+    <a href="/categories/Spatial-database/">Spatial database</a>
+
+
+
+
+    
+    &nbsp;
+    <i class="fa fa-tag"></i>&nbsp;
+    <a href="/tags/Spatial-database/">Spatial database</a>
+
+
+    </div>
+    <hr>
+    <div class="picture-container">
       
     </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="B-树"><a href="#B-树" class="headerlink" title="B-树"></a>B-树</h3><p>B-树又称为平衡多叉查找树，其定义如下。</p>
+    <h3 id="B-树"><a href="#B-树" class="headerlink" title="B-树"></a>B-树</h3><p>B-树又称为平衡多叉查找树，其定义如下。</p>
 <p>一颗m阶的B-树，或为空树，或为具有以下特性的m叉查找树：</p>
 <p>（1）树中每个结点最多有m棵子树；</p>
 <p>（2）除根以外的所有非叶节点至少有$\left \lceil m/2 \right \rceil$棵子树，根节点若是非叶节点，则至少有两棵子树；</p>
@@ -129,54 +120,61 @@ $$(n,A{0},(K{1},D{1}),A{1},(K{2},D{2}">
 <p>栅格文件是典型的基于哈希结构的存取方式，是一维动态散列表在高维空间的扩展，主要适用于索引高维空间点。栅格不必是规则的，因而单元的大小也可以是不同的。栅格由包含着很多与数据桶相联系的单元的栅格目录来实现，一般一个数据桶为硬盘上一个磁盘页。每个单元只对应一个数据桶，而一个数据桶往往可以包含几个相邻的单元。</p>
 <p>栅格文件的优点是，当其用于索引低维空间的点状目标时，由于可以在较少的外存页面访问中得到查找结果，尤其是对于精确匹配的点查找，可以通过两次外存访问（一次是访问栅格目录，一次是访问数据页）得到结果，因此效率较高。栅格文件的主要问题是栅格目录的存储，因为如果空间维数较高或数据量较多时，栅格目录将变得非常庞大，每一次分裂，都将增加很多栅格目录项。而且栅格目录往往存储在外存，其存储和操作也需涉及外存的访问。另外，当索引非点状空间目标时，需要采取目标近似与目标映射或允许目标重复存储的策略，区域查询效率差。</p>
 
-      
-    </div>
-    
-    
-      <footer class="article-footer">
-        
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spatial-database/">Spatial database</a></li></ul>
 
-      </footer>
-    
+  </article>
+  </script>
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
   </div>
-  
-    
-<nav id="article-nav">
-  
-  
-    <a href="/2017/03/24/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hello World&nbsp;<span>&gt;</span></div>
-    </a>
-  
-</nav>
-
-  
-</article>
 
 
 
 
-
-
-
-</section>
-    <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2017 Macielyoung&nbsp;
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot container">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <i class="fa fa-arrow-right"></i>
+        </a>
+        © XXX 20xx-2017
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
 </footer>
-    
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.js"></script>
+<script type="text/javascript">
 
-<script src="/js/jquery.min.js"></script>
+// disqus scripts
 
 
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
 
-<script src="/js/script.js"></script>
-  </div>
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
 </body>
 </html>
