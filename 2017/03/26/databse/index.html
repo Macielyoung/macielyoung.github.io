@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content="" />
+  
+  <title>空间数据库的基本索引结构</title>
+  <meta name="author" content="Macielyoung">
+   <meta name="description" content="In me the tiger sniffs the rose">
+  
+
+  <meta property="og:title" content="空间数据库的基本索引结构"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Dreaming"/>
+ <meta property="og:image" content="undefined"/>
+  
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Dreaming" type="application/atom+xml">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body>
+  <a id="top"></a>
+  <div id='wx_pic' style='display:none;'><img src='/wx_share.png'/></div>
+  <div id="main">
+    <div class="behind">
+      <div class="back">
+        <a href="/" class="black-color"><i class="fa fa-times" aria-hidden="true"></i></a>
+      </div>
+      <div class="description">
+        &nbsp;
+      </div>
+    </div>
+    <div class="container">
+      
+
+  <article class="standard post">
+    <div class="title">
+      
+  
+    <h1 class="page-title center">
+        空间数据库的基本索引结构
+    </h1>
+  
+
+
+    </div>
+    <div class="meta center">
+      
+<time datetime="2017-03-26T06:34:15.421Z">
+  <i class="fa fa-calendar"></i>&nbsp;
+  2017-03-26
+</time>
+
+
+
+
+
+
+    
+    &nbsp;
+    <i class="fa fa-tag"></i>&nbsp;
+    <a href="/tags/Spatial-database/">Spatial database</a>
+
+
+    </div>
+    <hr>
+    <div class="picture-container">
+      
+    </div>
+    <h3 id="B-树"><a href="#B-树" class="headerlink" title="B-树"></a>B-树</h3><p>B-树又称为平衡多叉查找树，其定义如下。</p>
+<p>一颗m阶的B-树，或为空树，或为具有以下特性的m叉查找树：</p>
+<p>（1）树中每个结点最多有m棵子树；</p>
+<p>（2）除根以外的所有非叶节点至少有$\left \lceil m/2 \right \rceil$棵子树，根节点若是非叶节点，则至少有两棵子树；</p>
+<p>（3）所有的非叶结点中含有如下信息<br>$$<br>(n,A<em>{0},(K</em>{1},D<em>{1}),A</em>{1},(K<em>{2},D</em>{2}),\cdot \cdot \cdot ,A<em>{n-1},(K</em>{n},D<em>{n}),A</em>{n})<br>$$<br>其中，(Ki,Di)(i=1,2,…,n)为索引项，且Ki&lt;Ki+1(i=1,2,…,n-1),Ai(i=1,2,…,n)为指向子树根结点的指针，且Ai-1所指子树中所有索引项的关键字小于Ki(i=1,2,…,n)，An所指子树中所有索引项的关键字大于Kn，$n(\left \lceil m/2 \right \rceil-1\leq n\leq m-1)$为结点中索引项的个数；</p>
+<p>（4）所有叶结点都在同一层上，且不含任何信息。</p>
+<p>下图是一棵3阶的B-树，其深度为3（即第三层为不带任何信息的叶结点）。</p>
+<p><img src="database/1.jpg" alt="B-树"></p>
+<h3 id="KD树"><a href="#KD树" class="headerlink" title="KD树"></a>KD树</h3><p>kd树（k维搜索树）是把二叉树推广到多维数据的一种主存数据结构，是k维空间中的二叉树，主要用于存储点数据。一个平面图在每一个内部结点中，用一个k-1维的超平面（如二维平面中的线）将节点所表示的k维空间分成两个部分，这些超平面在k个可能的方向上交替出现，而且在每个超平面中至少包括一个点数据。</p>
+<p>kd树是一个满足如下性质的k维空间中的二叉树：</p>
+<p>（1）如果它的左子树非空，则左子树上所有结点的第d维的值均小于它的根结点的第d维的值；</p>
+<p>（2）如果它的右子树非空，则右子树上所有结点的第d维的值均大于或等于它的根结点的第d维的值；</p>
+<p>（3）它的左右子树也均为kd树。</p>
+<p>例：给定一个二维空间数据集：T={(2 , 3) , (5 , 4) , (9 , 6) , (4 , 7) , (8 , 1) , (7 , 2)}，构造一个平衡kd树。</p>
+<p>根结点对应包含数据集T的矩形，选择x轴，6个数据点的x坐标中位数是6，这里选最近的(7 , 2)点，以平面x=7将空间分为左右两个子矩形（子结点）；接着左矩形以y=4分为两个子矩形（左矩形中{(2 , 3) , (5 , 4) , (4 , 7)}点的y坐标中位数是4），右矩形以y=6分为两个子矩形，依此递归下去，最后得到如下图所示的特征空间划分和kd树。</p>
+<p><img src="database/2.png" alt="kd树"></p>
+<h3 id="R-树"><a href="#R-树" class="headerlink" title="R-树"></a>R-树</h3><p>R-树是一种多级平衡树，在R-树中存放的数据并不是原始数据，而是这些数据的最小外包矩形（MBR），空间对象的MBR被包含于R-树的叶子结点中。如果在空间上包含了所指元组表达的k维数据对象，这时也称为最小边界盒（MBB）。每个结点对应一个磁盘页面。</p>
+<p>当R-树检索时，首先判定哪些结点中的矩形区域与检索窗口（如范围查询）交叠，再进一步判定窗口内矩形区域中有哪些是被检索的对象。由于允许MBR之间交叠，所以在每一层索引可能有多个结点与检索窗口交叠。</p>
+<p>R-树满足以下结构特点。</p>
+<p>（1）R-树中每一个非叶子结点代表数据集空间中的一个矩形，该矩形为其子结点所代表矩形的MBR。非叶子结点由多个（Rect，Child）结构的数据项组成，其中Child为子结点指针，Rect为与子结点Child相关的MBR或包含其子结点中矩形的最小外包矩形。</p>
+<p>（2）每一个非叶子结点，至少有两个子结点。</p>
+<p>（3）而叶子结点则由多个（Rect，O）结构的数据项组成，其中O为指向空间对象的具体数据指针，Rect为对象O的MBR。在空间上包含了所指元组表达的k维数据对象。</p>
+<p>（4）所有叶子结点出现在同一层。</p>
+<p>（5）除根结点外，每个叶子结点包含m~M条索引记录，其中$m\leq (M/2)$。</p>
+<p>（6）所有MBR的边与一个全局坐标系的轴平行。</p>
+<p>（7）R-树结构的一个重要特点就是兄弟结点对应的空间区域可以互相交叠。</p>
+<p>R-树结构的一个重要特点就是兄弟结点对应的空间区域可以互相交叠，这样的特性一方面使R-树比较容易进行删除和插入操作，但另一方面使空间搜索的效率降低。因为区域之间有重叠，所以可能要对多条路径进行搜索后才能得到最后的结果，从而产生了许多R树的变种如$R^{+}$树、$R^{*}$树等其他先进的空间索引结构来提高查询效率。</p>
+<p>构建R-树的基本思想如下。</p>
+<p>（1）根据空间对象在空间上的分布情况，将对象集合进行划分，每组对象在空间位置上尽可能聚集为一簇，并且每组对象的对象数尽可能接近树中规定的结点最大容量M值而不超过它。</p>
+<p>（2）每组对象构造一个叶子结点，求出该叶子结点的最小包含矩形，即该组中所含的所有对象的矩形外包。将形成的叶子结点按照与空间对象同样的方法处理，如此递归下去，直到形成一个根结点，树的构造完成。</p>
+<p>R-树是一种动态的索引结构，其插入、删除可以和查询混合进行。R-树是对$B^{+}$树的扩充，因而它不仅具有$B^{+}$树特有的动态平衡性（所有叶子结点都在同一层上），而且能进行多维索引。</p>
+<p>下图是R-树的一个简单实例：</p>
+<p><img src="database/3.jpg" alt="R-树"></p>
+<h3 id="栅格文件索引结构"><a href="#栅格文件索引结构" class="headerlink" title="栅格文件索引结构"></a>栅格文件索引结构</h3><p>最简单的存取多维点数据的方法之一就是利用固定栅格存取结构（如经度 - 纬度栅格）。固定栅格方法将嵌入的n维空间划分成同等大小的数据桶。实现固定栅格的数据结构是一个n维数组。单元中的点可以存储在一个动态结构中（如链表）来处理溢出。这种结构对于处理静态一致分布数据（如卫星影像）十分有效，然而固定栅格结构是固定的，它的目录稀疏且巨大。</p>
+<p>为了获得更好的灵活性和性能，可以采用栅格文件。设k为空间的维数，则栅格文件结构由两个基本结构组成：k个线性刻度和一个k维目录。</p>
+<p>栅格文件的结构是根据一正交的栅格划分的k维数据空间。k维数据空间的栅格由k个一维数组表示的刻度所定义。刻度的每一边界构成一（k-1）维的超平面，对于二维空间为平行于x或y轴的直线，这一超平面将数据空间划分为两个子空间。所有的边界一起将整个数据空间划分为许多个k维的矩形子空间，这些矩形子空间称为栅格目录，由一k维的数组表示。目录项（即栅格目录数组的元素）和栅格单元之间具有一对一的关系。栅格目录的每一栅格单元包含一外存页的地址，这一外存页存储了包含于该栅格单元的数据目标，称为数据页。因为没有每一栅格单元必须至少包含m（m&gt;0）个目标的约束，所以一个数据页允许存储多个栅格单元的目标，只要这几个栅格单元一起形成一矩形的区域。数据页所对应的一个或多个栅格单元称为存储区域。存储区域两两不相交，跨越整个数据空间。</p>
+<p>栅格文件是典型的基于哈希结构的存取方式，是一维动态散列表在高维空间的扩展，主要适用于索引高维空间点。栅格不必是规则的，因而单元的大小也可以是不同的。栅格由包含着很多与数据桶相联系的单元的栅格目录来实现，一般一个数据桶为硬盘上一个磁盘页。每个单元只对应一个数据桶，而一个数据桶往往可以包含几个相邻的单元。</p>
+<p>栅格文件的优点是，当其用于索引低维空间的点状目标时，由于可以在较少的外存页面访问中得到查找结果，尤其是对于精确匹配的点查找，可以通过两次外存访问（一次是访问栅格目录，一次是访问数据页）得到结果，因此效率较高。栅格文件的主要问题是栅格目录的存储，因为如果空间维数较高或数据量较多时，栅格目录将变得非常庞大，每一次分裂，都将增加很多栅格目录项。而且栅格目录往往存储在外存，其存储和操作也需涉及外存的访问。另外，当索引非点状空间目标时，需要采取目标近似与目标映射或允许目标重复存储的策略，区域查询效率差。</p>
+
+
+  </article>
+  </script>
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+  <div class="busuanzi center">
+    页阅读量:&nbsp;<span id="busuanzi_value_page_pv"></span>&nbsp;・&nbsp;
+    站访问量:&nbsp;<span id="busuanzi_value_site_pv"></span>&nbsp;・&nbsp;
+    站访客数:&nbsp;<span id="busuanzi_value_site_uv"></span>
+  </div>
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+<div class="right-foot container">
+    <div class="firstrow">
+        <a href="#top" target="_self">
+        <i class="fa fa-arrow-right"></i>
+        </a>
+        © XXX 20xx-2017
+    </div>
+    <div class="secondrow">
+        <a href="https://github.com/gaoryrt/hexo-theme-pln">
+        Theme Pln
+        </a>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+// dropdown scripts
+$(".dropdown").click(function(event) {
+  var current = $(this);
+  event.stopPropagation();
+  $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open"))?'removeClass':'addClass']("open")
+});
+$(document).click(function(){
+    $(".dropdown-content").removeClass("open");
+})
+
+var path = "/search.xml";
+searchFunc(path, 'local-search-input', 'local-search-result');
+
+</script>
+
+</body>
+</html>
